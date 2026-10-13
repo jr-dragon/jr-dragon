@@ -1,0 +1,14 @@
+---
+const isBlog = Astro.url.pathname.startsWith("/blog");
+---
+
+<header class="border-b border-separator">
+	<nav aria-label="主要導覽" class="mx-auto flex max-w-5xl items-center justify-between gap-6 px-6 py-5">
+		<a href="/" class="font-semibold text-foreground"></a>
+		<a
+			href="/blog/"
+			aria-current={isBlog ? "page" : undefined}
+			class="text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-4"
+		>文章</a>
+	</nav>
+</header>

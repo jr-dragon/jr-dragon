@@ -1,6 +1,27 @@
 ---
+import { execFileSync } from "node:child_process";
 import "../styles/global.css";
-import { Typography } from "@heroui/react";
+import { buttonVariants, Typography } from "@heroui/react";
+
+const directoryDate = import.meta.env.DEV
+	? new Date()
+	: new Date(execFileSync("git", ["log", "-1", "--format=%cI"], {
+		cwd: process.cwd(),
+		encoding: "utf8",
+	}).trim());
+const dateParts = new Intl.DateTimeFormat("en-US", {
+	timeZone: "Asia/Taipei",
+	month: "2-digit",
+	day: "2-digit",
+	year: "numeric",
+	hour: "2-digit",
+	minute: "2-digit",
+	second: "2-digit",
+	hourCycle: "h23",
+}).formatToParts(directoryDate);
+const datePart = (type: Intl.DateTimeFormatPartTypes) =>
+	dateParts.find((part) => part.type === type)?.value;
+const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("day")} ${datePart("hour")}:${datePart("minute")}:${datePart("second")}`;
 ---
 <html lang="zh-Hant" class="dark" data-theme="dark">
 	<head>
@@ -20,16 +41,22 @@ import { Typography } from "@heroui/react";
 			<div class="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
 				<section
 					aria-label="Terminal"
-					class="order-2 overflow-hidden rounded-2xl border border-border bg-surface lg:order-1"
+					class="order-2 min-w-0 overflow-hidden rounded-2xl border border-border bg-surface lg:order-1"
 				>
 					<div class="flex h-10 items-center gap-2 border-b border-separator bg-default px-4" aria-hidden="true">
 						<span class="size-3 rounded-full bg-danger"></span>
 						<span class="size-3 rounded-full bg-warning"></span>
 						<span class="size-3 rounded-full bg-success"></span>
 					</div>
-					<div class="min-h-64 p-4 font-mono sm:min-h-80 lg:min-h-96">
+					<div class="min-h-64 overflow-x-auto p-4 font-mono sm:min-h-80 lg:min-h-96">
 						<div class="text-[#528BFF]">$ whoami</div>
 						<div class="text-[#9CA3AF]">j.dragon</div>
+						<div><br></div>
+						<div class="text-[#32D74B]">$ ls -l</div>
+						<a href="/blog/" class="block w-max whitespace-nowrap rounded-sm decoration-[#9CA3AF] underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2">
+							<span class="text-[#9CA3AF]">dr--r--r--</span>{" "}
+							<time datetime={directoryDate.toISOString()} class="text-[rgb(0,215,0)]">{directoryDateText}</time>{" "}<span class="text-[rgb(170,170,239)]">articles/</span>
+						</a>
 					</div>
 				</section>
 				<section aria-labelledby="hero-title" class="order-1 space-y-6 lg:order-2">
@@ -40,6 +67,9 @@ import { Typography } from "@heroui/react";
 						在繁華似錦的浮世下留下一抹足跡，<br>
 						願你我能在此地能夠獲得片刻喘息。
 					</Typography>
+					<a href="/blog/" class={buttonVariants({ variant: "primary" })}>
+						瀏覽文章
+					</a>
 				</section>
 			</div>
 		</main>
