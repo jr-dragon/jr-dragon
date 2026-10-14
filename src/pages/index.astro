@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import "../styles/global.css";
 import { buttonVariants, Typography } from "@heroui/react";
+import BaseHead from "../components/BaseHead.astro";
 
 const directoryDate = import.meta.env.DEV
 	? new Date()
@@ -25,16 +26,7 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 ---
 <html lang="zh-Hant" class="dark" data-theme="dark">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<meta
-			name="description"
-			content="在繁華似錦的浮世下留下一抹足跡，願你我都能在此能夠小憩片刻。"
-		/>
-		<title>芥龍 | J.Dragon</title>
+		<BaseHead title="芥龍"/>
 	</head>
 	<body class="bg-background text-foreground">
 		<main class="flex min-h-svh items-center px-6 py-16 sm:px-10 lg:px-12">
@@ -64,8 +56,8 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 						安安，我是<span class="text-accent">芥龍</span>。
 					</Typography>
 					<Typography type="body" color="muted" className="max-w-sm">
-						在繁華似錦的浮世下留下一抹足跡，<br>
-						願你我能在此地能夠獲得片刻喘息。
+						在繁華似錦的浮世留下一抹足跡，<br>
+						願你能在此地能夠獲得片刻喘息。
 					</Typography>
 					<a href="/blog/" class={buttonVariants({ variant: "primary" })}>
 						瀏覽文章
