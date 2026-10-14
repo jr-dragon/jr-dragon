@@ -6,11 +6,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import ArticleAgeAlert from '../components/ArticleAgeAlert';
+import ArticleTags from '../components/ArticleTags';
 import { isArticleOutdated } from '../utils/article-age';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, pubDate, updatedDate, heroImage, heroImageFrom } = Astro.props;
+const { title, tags, pubDate, updatedDate, heroImage, heroImageFrom } = Astro.props;
 const heroImageHost = heroImageFrom ? new URL(heroImageFrom).host : undefined;
 const showAgeAlert = isArticleOutdated(pubDate, updatedDate);
 const publicationDateLabel = pubDate.toLocaleDateString('zh-TW', {
@@ -117,12 +118,14 @@ const publicationDateLabel = pubDate.toLocaleDateString('zh-TW', {
 							)}
 						</div>
 						<h1 class="typography typography--h1">{title}</h1>
+						{tags && tags.length > 0 && (
+							<ArticleTags tags={tags} />
+						)}
 						{showAgeAlert && (
 							<div class="my-6 text-left">
 								<ArticleAgeAlert publishedAt={pubDate.toISOString()} dateLabel={publicationDateLabel} />
 							</div>
 						)}
-						<hr class="my-8 border-separator" />
 					</div>
 					<div class="typography-prose"><slot /></div>
 				</div>
