@@ -5,6 +5,7 @@ description: "大多數的 PHP 開發者都會告訴你：用 PDO 取代 mysqli_
 pubDate: 2018-05-26T00:00:00+00:00
 heroImage: '../../../assets/php-pdo-prepare-doesnt-prepared.webp'
 heroImageFrom: 'https://pixabay.com/zh/photos/programming-html-css-javascript-1873854/'
+tags: ["php"]
 ---
 
 大部份的 PHP 開發者都會告訴你：用 PDO 取代 `mysqli` 相關函式，它不僅支援 [Prepared Statement](https://en.wikipedia.org/wiki/Prepared_statement)，不僅效能好，而且還有多種 Driver 可以隨時切換不同的 Database。
