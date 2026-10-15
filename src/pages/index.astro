@@ -1,16 +1,15 @@
 ---
-import { execFileSync } from "node:child_process";
+import { getCollection } from "astro:content";
 import "../styles/global.css";
 import { buttonVariants, Typography } from "@heroui/react";
 import BaseHead from "../components/BaseHead.astro";
 
-const directoryDate = import.meta.env.DEV
-	? new Date()
-	: new Date(execFileSync("git", ["log", "-1", "--format=%cI"], {
-		cwd: process.cwd(),
-		encoding: "utf8",
-	}).trim());
-const dateParts = new Intl.DateTimeFormat("en-US", {
+const posts = await getCollection("blog");
+const directoryDate = posts
+	.map(({ data }) => data.updatedDate ?? data.pubDate)
+	.sort((a, b) => b.valueOf() - a.valueOf())
+	.at(0);
+const dateParts = directoryDate ? new Intl.DateTimeFormat("en-US", {
 	timeZone: "Asia/Taipei",
 	month: "2-digit",
 	day: "2-digit",
@@ -19,7 +18,7 @@ const dateParts = new Intl.DateTimeFormat("en-US", {
 	minute: "2-digit",
 	second: "2-digit",
 	hourCycle: "h23",
-}).formatToParts(directoryDate);
+}).formatToParts(directoryDate) : [];
 const datePart = (type: Intl.DateTimeFormatPartTypes) =>
 	dateParts.find((part) => part.type === type)?.value;
 const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("day")} ${datePart("hour")}:${datePart("minute")}:${datePart("second")}`;
@@ -47,7 +46,7 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 						<div class="text-[#32D74B]">$ ls -l</div>
 						<a href="/blog/" class="block w-max whitespace-nowrap rounded-sm decoration-[#9CA3AF] underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2">
 							<span class="text-[#9CA3AF]">dr--r--r--</span>{" "}
-							<time datetime={directoryDate.toISOString()} class="text-[rgb(0,215,0)]">{directoryDateText}</time>{" "}<span class="text-[rgb(170,170,239)]">articles/</span>
+							{directoryDate && <time datetime={directoryDate.toISOString()} class="text-[rgb(0,215,0)]">{directoryDateText}</time>}{" "}<span class="text-[rgb(170,170,239)]">articles/</span>
 						</a>
 					</div>
 				</section>
