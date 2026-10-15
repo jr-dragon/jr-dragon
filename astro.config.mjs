@@ -7,9 +7,11 @@ import markdoc from '@astrojs/markdoc';
 import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://chivincent.net',
   vite: {
     plugins: [tailwindcss()]
   },
@@ -21,5 +23,5 @@ export default defineConfig({
     })
   },
 
-  integrations: [mdx(), react(), markdoc()]
+  integrations: [mdx(), react(), markdoc(), sitemap()]
 });
