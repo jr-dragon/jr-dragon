@@ -1,7 +1,7 @@
 ---
 slug: laravel-jwt-authentication
 title: "Laravel JWT 認證"
-description: "Laravel JWT 認證"
+description: "從 Passport 與 jwt-auth 的整合限制出發，示範以 Lcobucci JWT、自訂 Service Provider 與 RequestGuard 實作 Laravel 的 JWT 簽發及驗證，支援跨服務認證需求。"
 pubDate: 2021-10-13T11:15:03+08:00
 heroImage: '../../assets/laravel-jwt-authentication.webp'
 heroImageFrom: 'https://www.pexels.com/zh-tw/photo/15177504/'

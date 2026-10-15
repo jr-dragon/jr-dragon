@@ -1,7 +1,7 @@
 ---
 slug: ftp-ftps-and-sftp
 title: "FTP, FTPS 與 SFTP"
-description: "FTP, FTPS 與 SFTP"
+description: "釐清 FTP、FTPS 與 SFTP 的協定與加密差異，說明主動、被動模式和 NAT 的關係，並示範使用 PHP FTP、SSH2 擴充套件及 phpseclib 連線與下載檔案。"
 pubDate: 2021-08-28T11:46:22+08:00
 heroImage: '../../assets/ftp-ftps-and-sftp.webp'
 heroImageFrom: 'https://www.pexels.com/zh-tw/photo/5882581/'

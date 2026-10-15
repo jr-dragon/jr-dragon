@@ -1,7 +1,7 @@
 ---
 slug: php-pdo-prepare-doesnt-prepared
 title: "PHP 騙你 PDO Prepare 並沒有準備好"
-description: "大多數的 PHP 開發者都會告訴你：用 PDO 取代 mysqli_* 相關函式，因為它不僅支援 Prepared Statement，不僅效能比較好，而且還可以利用多種現成的 Driver 隨時切換資料庫。"
+description: "以 Wireshark 封包分析比較 PDO 模擬與原生 Prepared Statement 的執行差異，探討 ATTR_EMULATE_PREPARES 設定、重複查詢效能，以及 Laravel 搭配 ProxySQL 時的注意事項。"
 pubDate: 2018-05-26T00:00:00+00:00
 heroImage: '../../../assets/php-pdo-prepare-doesnt-prepared.webp'
 heroImageFrom: 'https://pixabay.com/zh/photos/programming-html-css-javascript-1873854/'

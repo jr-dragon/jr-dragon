@@ -1,7 +1,7 @@
 ---
 slug: gnu-go-and-katago-on-sabaki
 title: "在 Sabaki 上使用 GNU Go 及 Katago"
-description: "在 Sabaki 上使用 GNU Go 及 Katago"
+description: "以 Sabaki 建立單機圍棋環境，整理 GNU Go 與 KataGo 的安裝、模型選擇及 GTP 引擎設定，並將 KataGo 設為分析器，在研究棋譜時查看落子勝率。"
 pubDate: 2022-04-08T13:04:36+08:00
 heroImage: "../../assets/gnu-go-and-katago-on-sabaki.webp"
 heroImageFrom: "https://www.pexels.com/zh-tw/photo/39974190/"

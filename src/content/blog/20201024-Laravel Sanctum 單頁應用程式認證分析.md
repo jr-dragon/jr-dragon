@@ -1,7 +1,7 @@
 ---
 slug: laravel-sanctum-spa-authenticate-analysis
 title: "Laravel Sanctum 單頁應用程式認證分析"
-description: "Laravel Sanctum 單頁應用程式認證分析"
+description: "比較 Laravel 各種 Auth Guard 的應用情境，剖析 Sanctum 如何依請求來源啟用 SPA 的 Session 認證，並示範以 curl 模擬前端請求，討論其整合 Token 認證帶來的複雜度。"
 pubDate: 2020-10-24T16:15:52+08:00
 heroImage: '../../assets/laravel-sanctum-spa-authenticate-analysis.webp'
 heroImageFrom: 'https://pixabay.com/zh/photos/durdle-door-the-rock-ocean-the-sky-809459/'

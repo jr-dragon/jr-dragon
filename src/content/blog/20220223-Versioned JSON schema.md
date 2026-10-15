@@ -1,7 +1,7 @@
 ---
 slug: versioned-json-schema
 title: "資料庫中的版本化 JSON"
-description: "資料庫中的版本化 JSON"
+description: "為資料庫中的 JSON 加入 version 與 payload，透過 Laravel Eloquent 的型別轉換、Castable Model 與版本解析器，處理資料格式演進及新舊版本並存的維護問題。"
 pubDate: 2022-02-23T14:45:06+08:00
 heroImage: '../../assets/versioned-json-schema.jpg'
 heroImageFrom: 'https://www.pexels.com/zh-tw/photo/11035481/'

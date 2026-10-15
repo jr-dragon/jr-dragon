@@ -1,7 +1,7 @@
 ---
 slug: macos-lima
 title: "macOS Lima 指南"
-description: "macOS Lima 指南"
+description: "記錄在 macOS 上安裝與設定 Lima Linux 虛擬機的流程，透過 containerd 與 nerdctl 操作容器及 Compose 服務，並整理資源配置、可寫目錄掛載與連接埠限制。"
 pubDate: 2021-09-23T23:11:39+08:00
 heroImage: '../../assets/macos-lima.svg'
 heroImageFrom: 'https://github.com/lima-vm/lima/blob/master/website/static/images/logo-dark.svg'

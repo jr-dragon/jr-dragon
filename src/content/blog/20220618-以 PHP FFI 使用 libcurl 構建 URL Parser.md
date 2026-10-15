@@ -1,7 +1,7 @@
 ---
 slug: url-parser-using-libcurl-with-php-ffi
 title: "以 PHP FFI 使用 libcurl 構建 URL Parser"
-description: "以 PHP FFI 使用 libcurl 構建 URL Parser"
+description: "示範透過 PHP FFI 呼叫 libcurl 的 URL API，從 C 型別與函式宣告、指標操作到記憶體釋放，構建可處理中文 URL 的解析器，並比較純 PHP 與其他語言的方案。"
 pubDate: 2022-06-17T23:28:18+08:00
 heroImage: '../../assets/url-parser-using-libcurl-with-php-ffi.webp'
 heroImageFrom: 'https://pixabay.com/zh/photos/waves-sea-ocean-beach-blue-water-3473335/'

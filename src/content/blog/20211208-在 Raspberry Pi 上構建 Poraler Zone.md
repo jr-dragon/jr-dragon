@@ -1,7 +1,7 @@
 ---
 slug: portaler-zone-on-raspberry-pi
 title: "在 Raspberry Pi 上構建 Portaler Zone"
-description: "在 Raspberry Pi 上構建 Portaler Zone"
+description: "記錄在 Raspberry Pi 4 的 Manjaro ARM 環境自架 Portaler Zone，使用 containerd、nerdctl 與 BuildKit 建構容器，處理 ARM 相容性、前端編譯及 Nginx 整合。"
 pubDate: 2021-12-08T19:39:10+08:00
 heroImage: '../../assets/portaler-zone-on-raspberry-pi.webp'
 heroImageFrom: 'https://pixabay.com/zh/photos/canada-ontario-albion-falls-sunny-1685768/'
