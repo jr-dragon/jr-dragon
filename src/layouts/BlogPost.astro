@@ -8,6 +8,7 @@ import Footer from "../components/Footer.astro";
 import ArticleAgeAlert from '../components/ArticleAgeAlert';
 import ArticleTags from '../components/ArticleTags';
 import { isArticleOutdated } from '../utils/article-age';
+import 'katex/dist/katex.min.css';
 
 type Props = CollectionEntry<'blog'>['data'];
 
