@@ -1,7 +1,7 @@
 ---
 slug: color-change-for-vrchat-models-from-booth
 title: "為 BOOTH 購買的 VRChat 模型改顏色"
-description: "以 BOOTH 購買的 Zeffie 模型為例，示範使用 GIMP 修改貼圖顏色並在 Unity 調整材質。"
+description: "以 BOOTH 購買的模型為例，示範使用 GIMP 修改貼圖顏色並在 Unity 調整材質。"
 pubDate: 2023-03-04T15:02:32+08:00
 heroImage: "../../../assets/color-change-for-vrchat-models-from-booth.webp"
 tags: [game,vrchat]

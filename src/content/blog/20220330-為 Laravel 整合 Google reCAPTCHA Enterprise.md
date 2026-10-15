@@ -1,7 +1,7 @@
 ---
 slug: intergrate-google-recaptcha-enterprise-in-laravel
 title: "為 Laravel 整合 Google reCAPTCHA Enterprise"
-description: "以 Google 官方 SDK 將 reCAPTCHA Enterprise 整合至 Laravel，透過自訂 Validation Rule 與 Middleware 驗證 API 請求的 Token，並示範模擬 SDK 的單元測試。"
+description: "以 Google 官方 SDK 將 reCAPTCHA Enterprise 整合至 Laravel，透過自訂 Validation Rule 與 Middleware 驗證 API 請求的 Token，並示範如何模擬 SDK 的單元測試。"
 pubDate: 2022-03-30T14:15:42+08:00
 heroImage: "../../assets/intergrate-google-recaptcha-enterprise-in-laravel.webp"
 heroImageFrom: "https://www.pexels.com/zh-tw/photo/6069/"

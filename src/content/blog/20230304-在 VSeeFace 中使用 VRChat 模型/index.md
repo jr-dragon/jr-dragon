@@ -4,7 +4,7 @@ title: "在 VSeeFace 中使用 VRChat 模型"
 pubDate: 2023-03-04T16:18:06+08:00
 authors: [chivincent]
 tags: [game,vrchat,3d]
-description: "說明如何在 Unity 將 VRChat 模型匯出為 VRM，調整材質與表情後搭配 VSeeFace 和 iFacialMocap 進行表情捕捉。"
+description: "說明如何在 Unity 將 VRChat 模型匯出為 VRM，調整材質與表情後搭配 VSeeFace 和 iFacialMocap 進行臉部表情捕捉。"
 heroImage: "../../../assets/use-vrchat-models-in-vseeface.webp"
 heroImageFrom: "https://www.pexels.com/photo/landscape-with-a-mountain-lake-18430361/"
 ---

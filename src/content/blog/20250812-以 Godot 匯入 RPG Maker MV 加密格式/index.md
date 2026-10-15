@@ -4,7 +4,7 @@ pubDate: 2025-08-12T12:00:00+08:00
 slug: import-rpg-maker-mv-encrypted-file-in-godot
 authors: [chivincent]
 tags: [godot,rpgmaker]
-description: "解析 RPG Maker MV 的加密格式，並透過 Godot 匯入外掛處理解密、圖片匯入與匯出檔案膨脹問題。"
+description: "解析 RPG Maker MV 的加密格式，並透過 Godot 匯入外掛處理解密、圖片匯入與匯出問題。"
 heroImage: "../../../assets/import-rpg-maker-mv-encrypted-file-in-godot.webp"
 heroImageFrom: "https://www.pexels.com/photo/landscape-photography-of-waterfall-213875/"
 ---

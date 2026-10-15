@@ -4,7 +4,7 @@ pubDate: 2022-08-10T13:29:27+08:00
 slug: setup-wireguard-on-fedora-server
 authors: [chivincent]
 tags: [linux,vpn,wireguard]
-description: "介紹在 Fedora Server 安裝與設定 Wireguard VPN，並完成防火牆、核心轉送及服務啟動設定。"
+description: "介紹在 Fedora Server 安裝與設定 Wireguard VPN，並完成防火牆及服務啟動設定。"
 heroImage: "../../assets/setup-wireguard-on-fedora-server.webp"
 heroImageFrom: "https://www.pexels.com/photo/bridge-and-river-in-forest-7519556/"
 ---
