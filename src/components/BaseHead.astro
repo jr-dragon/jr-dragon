@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import GoogleAnalytics from "./GoogleAnalytics.astro";
 
 interface Props {
 	title: string;
@@ -15,3 +16,4 @@ const { title } = Astro.props;
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <title>{title} | J.Dragon</title>
+<GoogleAnalytics />

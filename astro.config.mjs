@@ -9,6 +9,8 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import sitemap from '@astrojs/sitemap';
 
+import partytown from '@astrojs/partytown';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://chivincent.net',
@@ -23,5 +25,15 @@ export default defineConfig({
     })
   },
 
-  integrations: [mdx(), react(), markdoc(), sitemap()]
+  integrations: [
+    mdx(),
+    react(),
+    markdoc(),
+    sitemap(),
+    partytown({
+      config: {
+        forward: ['dataLayer.push']
+      }
+    })
+  ]
 });

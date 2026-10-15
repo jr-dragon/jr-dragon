@@ -5,6 +5,7 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import ArticleAgeAlert from '../components/ArticleAgeAlert';
 import ArticleTags from '../components/ArticleTags';
 import { isArticleOutdated } from '../utils/article-age';
@@ -33,6 +34,7 @@ const publicationDateLabel = pubDate.toLocaleDateString('zh-TW', {
 		<link rel="icon" href="/favicon.ico" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
 		<title>{title} | J.Dragon</title>
+		<GoogleAnalytics />
 		<style>
 			main {
 				width: 100%;
