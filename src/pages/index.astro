@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import "../styles/global.css";
 import { buttonVariants, Typography } from "@heroui/react";
+import githubLogo from "../assets/github-invertocat-white-clearspace.svg";
 import BaseHead from "../components/BaseHead.astro";
 
 const posts = await getCollection("blog");
@@ -58,11 +59,27 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 						在繁華似錦的浮世留下一抹足跡，<br>
 						願你能在此地能夠獲得片刻喘息。
 					</Typography>
-					<a href="/blog/" class={buttonVariants({ variant: "primary" })}>
-						瀏覽文章
+					<a href="https://github.com/jr-dragon" class={buttonVariants({ variant: "outline", className: "github-button" })}>
+						<img src={githubLogo.src} alt="" aria-hidden="true" width="28" height="28" class="size-7 shrink-0" />
+						GitHub
 					</a>
 				</section>
 			</div>
 		</main>
 	</body>
 </html>
+
+<style>
+	.github-button {
+		--button-bg: #101411;
+		--button-bg-hover: #232925;
+		--button-bg-pressed: #101411;
+		--button-fg: #fff;
+		border-color: #909692;
+	}
+
+	.github-button:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+</style>
