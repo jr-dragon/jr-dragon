@@ -1,0 +1,54 @@
+---
+import { getCollection, render } from "astro:content";
+import type { InferGetStaticPropsType } from "astro";
+import { buttonVariants } from "@heroui/react";
+import Course from "../../../../layouts/Course.astro";
+import { getCourseChapterPages } from "../../../../utils/course";
+import { getCourseTitle } from "../../../../config/courses";
+
+export async function getStaticPaths() {
+	const pages = getCourseChapterPages(await getCollection("course"));
+	return pages.map((page) => ({
+		params: {
+			course_name: page.translation.courseName,
+			chapter_name: page.translation.slug,
+			locale: page.translation.locale,
+		},
+		props: page,
+	}));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { translation, translations, previous, next } = Astro.props;
+const courseTitle = getCourseTitle(translation.courseName, translation.locale);
+const title = translation.entry.data.title;
+const { description } = translation.entry.data;
+const { Content } = await render(translation.entry);
+---
+
+<Course title={`${title} | ${courseTitle}`} description={description} locale={translation.locale} translations={translations}>
+	<a href={translation.courseHref} class={buttonVariants({ variant: "outline", className: "h-auto max-w-full whitespace-normal py-3 text-left" })}>
+		{courseTitle} · 章節目錄
+	</a>
+	{translations.length > 1 && (
+		<nav aria-label="章節語言" class="flex flex-wrap gap-3">
+			{translations.map((alternative) => (
+				<a href={alternative.href} lang={alternative.locale} hreflang={alternative.locale} aria-current={alternative.locale === translation.locale ? "page" : undefined} class={buttonVariants({ variant: alternative.locale === translation.locale ? "secondary" : "outline" })}>
+					{alternative.locale}
+				</a>
+			))}
+		</nav>
+	)}
+	<article class="space-y-8">
+		<header class="space-y-3">
+			<p class="text-muted">第 {translation.order} 章</p>
+			<h1 class="typography typography--h1">{title}</h1>
+			{description && <p class="text-muted">{description}</p>}
+		</header>
+		<div class="typography-prose"><Content /></div>
+	</article>
+	<nav aria-label="章節導覽" class="flex flex-wrap justify-between gap-4 border-t border-separator pt-6">
+		{previous && <a href={previous.href} rel="prev" class={buttonVariants({ variant: "secondary" })}>上一章：{previous.entry.data.title}</a>}
+		{next && <a href={next.href} rel="next" class={buttonVariants({ variant: "secondary", className: "ml-auto" })}>下一章：{next.entry.data.title}</a>}
+	</nav>
+</Course>

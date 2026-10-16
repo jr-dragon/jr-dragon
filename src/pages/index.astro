@@ -5,8 +5,16 @@ import { buttonVariants, Typography } from "@heroui/react";
 import { List } from "lucide-react";
 import githubLogo from "../assets/github-invertocat-white-clearspace.svg";
 import BaseHead from "../components/BaseHead.astro";
+import CourseMenu from "../components/CourseMenu";
+import { getCourseTitle } from "../config/courses";
+import { groupCourseChapters } from "../utils/course";
 
 const posts = await getCollection("blog");
+const courses = groupCourseChapters(await getCollection("course")).map((course) => ({
+	id: course.name,
+	title: getCourseTitle(course.name),
+	href: course.href,
+}));
 const directoryDate = posts
 	.map(({ data }) => data.updatedDate ?? data.pubDate)
 	.sort((a, b) => b.valueOf() - a.valueOf())
@@ -61,10 +69,13 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 						願你能在此地能夠獲得片刻喘息。
 					</Typography>
 					<div class="flex flex-col items-start gap-4">
-						<a href="/blog/" class={buttonVariants({ variant: "primary" })}>
-							<List size={20} aria-hidden="true" />
-							文章列表
-						</a>
+						<div class="flex flex-wrap items-center gap-3">
+							<a href="/blog/" class={buttonVariants({ variant: "primary" })}>
+								<List size={20} aria-hidden="true" />
+								文章
+							</a>
+							<CourseMenu courses={courses} client:load />
+						</div>
 						<a href="https://github.com/jr-dragon" aria-label="GitHub" class={buttonVariants({ variant: "outline", isIconOnly: true, className: "github-button" })}>
 							<img src={githubLogo.src} alt="" aria-hidden="true" width="28" height="28" class="size-7 shrink-0" />
 						</a>

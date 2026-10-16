@@ -1,0 +1,54 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "katex/dist/katex.min.css";
+
+interface Props {
+	title: string;
+	description?: string;
+	locale?: string;
+	translations?: { locale: string; href: string }[];
+}
+
+const { title, description, locale = "zh-Hant", translations = [] } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={locale} class="dark" data-theme="dark">
+	<head>
+		<BaseHead title={title} />
+		{description && <meta name="description" content={description} />}
+		<link rel="canonical" href={canonicalURL} />
+		{translations.map((translation) => (
+			<link rel="alternate" hreflang={translation.locale} href={new URL(translation.href, Astro.site)} />
+		))}
+	</head>
+	<body class="bg-background text-foreground">
+		<Header />
+		<main class="mx-auto w-full max-w-3xl space-y-8 px-6 py-12">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main :global(.typography-prose > :not(:first-child)) {
+		margin-top: 1.5rem;
+	}
+	main :global(pre > code) {
+		padding: 0;
+		background: transparent;
+	}
+	main :global(table) {
+		display: block;
+		overflow-x: auto;
+	}
+	main :global(th),
+	main :global(td) {
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--separator);
+	}
+</style>

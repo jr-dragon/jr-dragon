@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import type { InferGetStaticPropsType } from "astro";
+import Course from "../../../layouts/Course.astro";
+import { groupCourseChapters } from "../../../utils/course";
+import { getCourseTitle } from "../../../config/courses";
+import CourseChapters from "../../../components/CourseChapters";
+
+export async function getStaticPaths() {
+	const courses = groupCourseChapters(await getCollection("course"));
+	return courses.map((course) => ({
+		params: { course_name: course.name },
+		props: { course },
+	}));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { course } = Astro.props;
+const courseTitle = getCourseTitle(course.name);
+const englishCourseTitle = getCourseTitle(course.name, "en");
+const chapters = course.chapters.map((chapter) => ({
+	id: chapter.directory,
+	order: chapter.order,
+	translations: chapter.translations.map((translation) => ({
+		locale: translation.locale,
+		language: translation.language,
+		title: translation.entry.data.title,
+		href: translation.href,
+	})),
+}));
+---
+
+<Course title={courseTitle}>
+	<header class="space-y-3">
+		<p class="text-muted">課程</p>
+		<h1 class="typography typography--h1">{courseTitle}</h1>
+		<p lang="en" class="text-lg text-muted">{englishCourseTitle}</p>
+		<p class="text-muted">共 {course.chapters.length} 個章節</p>
+	</header>
+	<section aria-label="章節目錄">
+		<CourseChapters chapters={chapters} />
+	</section>
+</Course>
