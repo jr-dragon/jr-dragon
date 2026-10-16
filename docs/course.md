@@ -72,3 +72,27 @@ the translation being rendered. Missing translations do not create routes or
 redirect readers to another language.
 
 The homepage course dropdown is interactive and displays the configured course titles.
+
+## Code blocks
+
+Markdown and MDX course code blocks display line numbers. Add a filename after
+the language to display it above a code block, for example `go ./main.go`.
+
+Wrap the filename in braces to load its contents from a local file at build time:
+
+````markdown
+---
+title: Overview
+codebase: './codebase'
+---
+
+```go {./main.go}
+```
+````
+
+`codebase` is resolved relative to the article file. The example loads
+`codebase/main.go` next to that article and displays `./main.go` as the caption.
+The external file replaces any content written inside the fence. Filenames must
+stay inside `codebase`, including when resolving symbolic links. Missing
+`codebase` values or unreadable files cause a rendering error. Ordinary filenames
+without braces continue to display the code written in the article.

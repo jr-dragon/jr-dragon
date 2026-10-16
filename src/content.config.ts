@@ -21,6 +21,8 @@ const course = defineCollection({
 	loader: glob({
 		base: "./src/content/course",
 		pattern: "**/*.{md,mdx,mdoc}",
+		// Read external code files on each build instead of caching their rendered HTML.
+		deferRender: true,
 		generateId: ({ entry }) => {
 			const id = entry.replace(/\.(md|mdx|mdoc)$/, "");
 			parseCourseChapterId(id);
@@ -30,6 +32,7 @@ const course = defineCollection({
 	schema: z.object({
 		title: z.string().trim().min(1),
 		description: z.string().optional(),
+		codebase: z.string().trim().min(1).optional(),
 	}),
 });
 
