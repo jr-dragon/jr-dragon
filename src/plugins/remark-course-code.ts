@@ -2,10 +2,12 @@ import type { RemarkPlugin } from "@astrojs/markdown-remark";
 import type { Blockquote, Parents } from "mdast";
 import { isAbsolute } from "node:path";
 import { readCodebaseFile } from "../utils/codebase.server";
+import { parseCodeReference } from "../utils/codebase";
 
 const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 	if (!file.path?.replaceAll("\\", "/").includes("/src/content/course/")) return;
 	const articlePath = file.path;
+	const revisions = new Set<string>();
 
 	async function wrapCodeBlocks(parent: Parents) {
 		for (let index = 0; index < parent.children.length; index++) {
@@ -13,9 +15,12 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 			if (node.type === "code" && node.meta?.trim()) {
 				let filename = node.meta.trim();
 				let sourcePath: string | undefined;
-				const external = /^\{(.*)\}$/.exec(filename);
+				let sourceRevision: string | undefined;
+				let external;
+				try { external = parseCodeReference(filename); }
+				catch (error) { file.fail(error instanceof Error ? error.message : String(error), node); }
 				if (external) {
-					filename = external[1].trim();
+					filename = external.filename;
 					const codebase = file.data.astro?.frontmatter?.codebase;
 					if (typeof codebase !== "string" || !codebase.trim()) {
 						file.fail(`External code block "${filename}" requires a non-empty codebase in frontmatter.`, node);
@@ -24,9 +29,11 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 						file.fail("External code block filenames must be non-empty paths relative to codebase.", node);
 					}
 					try {
-						const source = await readCodebaseFile(articlePath, codebase, filename);
+						const source = await readCodebaseFile(articlePath, codebase, filename, external.revision);
 						node.value = source.content;
 						sourcePath = source.path;
+						sourceRevision = source.revision;
+						if (sourceRevision) revisions.add(sourceRevision);
 					} catch (error) {
 						file.fail(`Cannot load external code block "${filename}" from codebase "${codebase}": ${error instanceof Error ? error.message : String(error)}`, node);
 					}
@@ -51,6 +58,7 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 										type: "button",
 										className: ["course-code-file-trigger"],
 										"data-codebase-file": sourcePath,
+										...(sourceRevision && { "data-codebase-revision": sourceRevision }),
 										"aria-haspopup": "dialog",
 										"aria-expanded": "false",
 										"aria-controls": "course-codebase-dialog",
@@ -69,6 +77,7 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 	}
 
 	await wrapCodeBlocks(tree);
+	if (file.data.astro?.frontmatter) file.data.astro.frontmatter.codebaseRevisions = [...revisions];
 };
 
 export default remarkCourseCode;

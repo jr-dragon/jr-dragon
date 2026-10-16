@@ -25,10 +25,16 @@ const { translation, translations, previous, next } = Astro.props;
 const courseTitle = getCourseTitle(translation.courseName, translation.locale);
 const title = translation.entry.data.title;
 const { description } = translation.entry.data;
-const { Content } = await render(translation.entry);
+const { Content, remarkPluginFrontmatter } = await render(translation.entry);
 const codebase = translation.entry.data.codebase && translation.entry.filePath
 	? await buildCodebase(translation.entry.filePath, translation.entry.data.codebase)
 	: undefined;
+const revisions: Record<string, NonNullable<typeof codebase>> = Object.create(null);
+if (codebase && translation.entry.filePath && translation.entry.data.codebase) {
+	for (const revision of (remarkPluginFrontmatter?.codebaseRevisions ?? []) as string[]) {
+		revisions[revision] = await buildCodebase(translation.entry.filePath, translation.entry.data.codebase, revision);
+	}
+}
 ---
 
 <Course title={`${title} | ${courseTitle}`} description={description} locale={translation.locale} translations={translations}>
@@ -52,7 +58,7 @@ const codebase = translation.entry.data.codebase && translation.entry.filePath
 		</header>
 		<div class="typography-prose course-code"><Content /></div>
 	</article>
-	{codebase && <CodebaseExplorer codebase={codebase} client:load />}
+	{codebase && <CodebaseExplorer codebase={codebase} revisions={revisions} client:load />}
 	<nav aria-label="章節導覽" class="flex flex-wrap justify-between gap-4 border-t border-separator pt-6">
 		{previous && <a href={previous.href} rel="prev" class={buttonVariants({ variant: "secondary" })}>上一章：{previous.entry.data.title}</a>}
 		{next && <a href={next.href} rel="next" class={buttonVariants({ variant: "secondary", className: "ml-auto" })}>下一章：{next.entry.data.title}</a>}

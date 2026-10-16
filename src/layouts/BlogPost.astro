@@ -8,6 +8,7 @@ import Footer from "../components/Footer.astro";
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import ArticleAgeAlert from '../components/ArticleAgeAlert';
 import ArticleTags from '../components/ArticleTags';
+import ShellCommandCopy from '../components/ShellCommandCopy.astro';
 import { isArticleOutdated } from '../utils/article-age';
 import 'katex/dist/katex.min.css';
 
@@ -158,5 +159,6 @@ const publicationDateLabel = pubDate.toLocaleDateString('zh-TW', {
 			</article>
 		</main>
 		<Footer/>
+		<ShellCommandCopy />
 	</body>
 </html>

@@ -6,14 +6,17 @@ import { Sheet } from "./sheet";
 import { fileAncestors, type Codebase, type CodebaseNode } from "../utils/codebase";
 import "./codebase-explorer.css";
 
-interface Props { codebase: Codebase }
+interface Props { codebase: Codebase; revisions?: Record<string, Codebase> }
+const noRevisions: Record<string, Codebase> = {};
 
-export default function CodebaseExplorer({ codebase }: Props) {
+export default function CodebaseExplorer({ codebase, revisions = noRevisions }: Props) {
 	const [isOpen, setOpen] = useState(false);
+	const [revision, setRevision] = useState<string | undefined>();
 	const [selectedPath, setSelectedPath] = useState<string | null>(null);
 	const [expandedKeys, setExpandedKeys] = useState<Set<Key>>(new Set());
 	const trigger = useRef<HTMLButtonElement | null>(null);
-	const selected = selectedPath ? codebase.files[selectedPath] : undefined;
+	const snapshot = revision ? revisions[revision] : codebase;
+	const selected = selectedPath ? snapshot?.files[selectedPath] : undefined;
 
 	useEffect(() => {
 		const article = document.getElementById("course-article");
@@ -21,15 +24,18 @@ export default function CodebaseExplorer({ codebase }: Props) {
 		function openFile(event: MouseEvent) {
 			const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>("button[data-codebase-file]") : null;
 			const path = button?.dataset.codebaseFile;
-			if (!button || !path || !Object.hasOwn(codebase.files, path)) return;
+			const version = button?.dataset.codebaseRevision;
+			const source = version ? Object.hasOwn(revisions, version) ? revisions[version] : undefined : codebase;
+			if (!button || !path || !source || !Object.hasOwn(source.files, path)) return;
 			trigger.current = button;
+			setRevision(version);
 			setSelectedPath(path);
-			setExpandedKeys((keys) => new Set([...keys, ...fileAncestors(path)]));
+			setExpandedKeys(new Set(fileAncestors(path)));
 			setOpen(true);
 		}
 		article.addEventListener("click", openFile);
 		return () => article.removeEventListener("click", openFile);
-	}, [codebase]);
+	}, [codebase, revisions]);
 
 	useEffect(() => {
 		trigger.current?.setAttribute("aria-expanded", String(isOpen));
@@ -38,7 +44,7 @@ export default function CodebaseExplorer({ codebase }: Props) {
 	function selectFile(keys: Selection) {
 		if (keys === "all") return;
 		const key = [...keys][0];
-		if (key !== undefined && Object.hasOwn(codebase.files, key)) setSelectedPath(String(key));
+		if (key !== undefined && snapshot && Object.hasOwn(snapshot.files, key)) setSelectedPath(String(key));
 	}
 
 	function renderNode(node: CodebaseNode): React.ReactNode {
@@ -56,7 +62,9 @@ export default function CodebaseExplorer({ codebase }: Props) {
 					<Sheet.CloseTrigger aria-label="關閉檔案瀏覽器" />
 					<Sheet.Header className="codebase-explorer__header">
 						<Sheet.Heading>專案檔案</Sheet.Heading>
-						<p className="codebase-explorer__description">瀏覽這個章節的程式碼</p>
+						<p className="codebase-explorer__description" title={revision}>
+							{snapshot?.commitMessage || "瀏覽這個章節的程式碼"}
+						</p>
 					</Sheet.Header>
 					<Sheet.Body className="codebase-explorer__body" data-sheet-no-drag onKeyDownCapture={(event) => {
 						// Dismiss before the tree consumes Escape for its selection handling.
@@ -67,12 +75,12 @@ export default function CodebaseExplorer({ codebase }: Props) {
 						}
 					}}>
 						<aside className="codebase-explorer__sidebar" aria-label="檔案導覽">
-							<p className="codebase-explorer__root"><FolderOpen size={16} aria-hidden="true" />{codebase.name}</p>
+							<p className="codebase-explorer__root"><FolderOpen size={16} aria-hidden="true" />{snapshot?.name}</p>
 							<FileTree aria-label="Codebase 檔案" selectionMode="single" selectionBehavior="replace" disallowEmptySelection
 								selectedKeys={selectedPath ? [selectedPath] : []} onSelectionChange={selectFile}
 								expandedKeys={expandedKeys} onExpandedChange={setExpandedKeys}
 								renderEmptyState={() => "沒有檔案"}>
-								{codebase.tree.map(renderNode)}
+									{snapshot?.tree.map(renderNode)}
 							</FileTree>
 						</aside>
 						<section className="codebase-explorer__preview" aria-label="檔案內容">
@@ -83,7 +91,7 @@ export default function CodebaseExplorer({ codebase }: Props) {
 								</div>
 								{selected.html === null
 									? <p className="codebase-explorer__empty">此檔案不支援文字預覽。</p>
-									: <div key={selected.path} className="codebase-explorer__code course-code" dangerouslySetInnerHTML={{ __html: selected.html }} />}
+									: <div key={`${revision ?? "working"}:${selected.path}`} className="codebase-explorer__code course-code" dangerouslySetInnerHTML={{ __html: selected.html }} />}
 							</> : <p className="codebase-explorer__empty">選擇檔案以查看內容。</p>}
 						</section>
 					</Sheet.Body>

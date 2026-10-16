@@ -111,3 +111,48 @@ and symbolic links are excluded. Binary files remain listed with a message
 instead of a text preview. Only translation files directly under a chapter
 become course pages, so Markdown files inside a codebase are browsable source
 files rather than additional chapters.
+
+### Git snapshots
+
+When `codebase` points to its own Git repository, append a commit hash in
+parentheses immediately after the external filename:
+
+````markdown
+```go {./main.go}(21b0f49)
+```
+````
+
+Short and full hexadecimal commit hashes are supported. The code block and
+every file in its explorer come from that commit, including files that have
+since been removed or renamed. Each block can use a different commit. The
+filename caption shows only the file path, and the Sheet displays that commit's
+message subject. The hash is used internally to select the snapshot. Reading a snapshot uses
+Git objects without checking out a commit or changing the index or worktree.
+Invalid hashes, missing commits, missing files, and non-repository codebases
+produce a rendering error rather than falling back to current contents.
+Unversioned references continue to read the current local files.
+
+The overview codebase is initialized on `main` with commit `21b0f49`. Its adjacent
+`codebase.bundle` preserves the repository's committed history in the website.
+Jujutsu excludes nested Git worktrees, so the bundle replaces the loose codebase
+files in the outer repository. A clean website checkout can build previews
+directly from this bundle without restoring the embedded repository; references
+without a hash use the bundle's `HEAD` when no local worktree exists.
+
+After committing changes inside the embedded codebase, refresh its bundle:
+
+```sh
+git -C src/content/course/build-redis-from-scratch/00-overview/codebase bundle create ../codebase.bundle --all
+```
+
+Keep commits referenced by articles reachable from a branch or tag when updating
+the bundle. To restore an editable codebase after checking out the website:
+
+```sh
+git clone src/content/course/build-redis-from-scratch/00-overview/codebase.bundle src/content/course/build-redis-from-scratch/00-overview/codebase
+```
+
+These Git commands apply only to embedded course repositories. Continue to use
+`jj` for version control of the website itself. Git is needed at build time;
+readers receive static snapshots and do not need Git or access to repository
+metadata.

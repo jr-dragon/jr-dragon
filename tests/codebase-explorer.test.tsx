@@ -84,3 +84,39 @@ test("ordinary captions do not open the explorer and missing previews are explai
 	await click(trigger("go.mod"));
 	expect(document.querySelector(".codebase-explorer__empty")?.textContent).toContain("不支援文字預覽");
 });
+
+test("each versioned trigger keeps the file tree and other file previews on its own commit", async () => {
+	const first = "a".repeat(40);
+	const second = "b".repeat(40);
+	const source = (text: string) => `<pre class="astro-code"><code><span class="line">${text}</span></code></pre>`;
+	const versions: Record<string, Codebase> = {
+		[first]: { name: "codebase", revision: first, commitMessage: "feat: create the first version", tree: [{ id: "src/main.go", name: "main.go" }, { id: "old.txt", name: "old.txt" }], files: {
+			"src/main.go": { path: "src/main.go", language: "go", html: source("OLD_MAIN") },
+			"old.txt": { path: "old.txt", language: "text", html: source("OLD_FILE") },
+		} },
+		[second]: { name: "codebase", revision: second, commitMessage: "fix: update the second version", tree: [{ id: "src/main.go", name: "main.go" }, { id: "new.txt", name: "new.txt" }], files: {
+			"src/main.go": { path: "src/main.go", language: "go", html: source("NEW_MAIN") },
+			"new.txt": { path: "new.txt", language: "text", html: source("NEW_FILE") },
+		} },
+	};
+	trigger().dataset.codebaseRevision = first;
+	await act(async () => { root.render(<CodebaseExplorer codebase={codebase} revisions={versions} />); await tick(); });
+	await click(trigger());
+	expect(document.querySelector(".codebase-explorer__description")?.textContent).toBe("feat: create the first version");
+	expect(document.querySelector(".codebase-explorer__code")?.textContent).toBe("OLD_MAIN");
+	expect(row("new.txt")).toBeUndefined();
+	await click(row("old.txt"));
+	expect(document.querySelector(".codebase-explorer__code")?.textContent).toBe("OLD_FILE");
+	await click(document.querySelector<HTMLButtonElement>('[aria-label="關閉檔案瀏覽器"]')!);
+	trigger().dataset.codebaseRevision = second;
+	await click(trigger());
+	expect(document.querySelector(".codebase-explorer__code")?.textContent).toBe("NEW_MAIN");
+	expect(document.querySelector(".codebase-explorer__description")?.textContent).toBe("fix: update the second version");
+	expect(row("old.txt")).toBeUndefined();
+	await click(row("new.txt"));
+	expect(document.querySelector(".codebase-explorer__code")?.textContent).toBe("NEW_FILE");
+	await click(document.querySelector<HTMLButtonElement>('[aria-label="關閉檔案瀏覽器"]')!);
+	await click(trigger("go.mod"));
+	expect(document.querySelector(".codebase-explorer__code")?.textContent).toBe("module example");
+	expect(document.querySelector(".codebase-explorer__description")?.textContent).not.toContain("Git 版本");
+});

@@ -1,0 +1,55 @@
+---
+import ToastProvider from "./ToastProvider";
+---
+
+<ToastProvider client:load />
+
+<script>
+	import { initializeShellCommandCopy } from "../utils/shell-command-copy";
+
+	initializeShellCommandCopy();
+	document.addEventListener("astro:page-load", () => initializeShellCommandCopy());
+</script>
+
+<style is:global>
+	pre.shell-copy-code > code {
+		display: block;
+		width: max-content;
+		min-width: 100%;
+	}
+	.shell-copy-code .shell-copy-line {
+		display: inline-block;
+		min-width: 100%;
+		line-height: 1.2lh;
+		border-radius: .125rem;
+		cursor: pointer;
+	}
+	.shell-copy-line:hover,
+	.shell-copy-line:focus-visible {
+		background: color-mix(in oklch, var(--accent) 18%, transparent);
+	}
+	.shell-copy-line:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: -2px;
+	}
+	.shell-copy-line .shell-prompt {
+		color: #f97583;
+	}
+	.shell-copy-line .shell-prompt-name {
+		color: #b392f0;
+	}
+	.shell-copy-line .shell-command {
+		color: #9ecbff;
+	}
+	.shell-copy-line .shell-string {
+		color: #ffab70;
+	}
+	.course-code .astro-code.shell-copy-code .line::before {
+		content: none;
+	}
+	.shell-copy-code .shell-output-line,
+	.shell-copy-code .shell-output-line span {
+		/* Override Shiki's inline token colors for terminal output. */
+		color: var(--foreground) !important;
+	}
+</style>

@@ -2,6 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ShellCommandCopy from "../components/ShellCommandCopy.astro";
 import "katex/dist/katex.min.css";
 import "../styles/course-code.css";
 
@@ -32,6 +33,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 			<slot />
 		</main>
 		<Footer />
+		<ShellCommandCopy />
 	</body>
 </html>
 
