@@ -26,7 +26,9 @@ test("loads a nested file relative to the article's codebase before highlighting
 	const { codebase, render } = await fixture(t);
 	await writeFile(join(codebase, "nested/main file.go"), "package main\r\n\r\nfunc main() {}\r\n");
 	const html = await render("```go {./nested/main file.go}\nstale content\n```");
-	assert.match(html, /<figcaption>\.\/nested\/main file\.go<\/figcaption>/);
+	assert.match(html, /<figcaption><button[^>]*>\.\/nested\/main file\.go<\/button><\/figcaption>/);
+	assert.match(html, /data-codebase-file="nested\/main file.go"/);
+	assert.match(html, /aria-haspopup="dialog"/);
 	assert.match(html, /class="astro-code/);
 	assert.match(html, /package/);
 	assert.doesNotMatch(html, /stale content|\{\.\/nested/);
@@ -38,6 +40,7 @@ test("keeps ordinary code blocks and non-course content unchanged", async (t) =>
 	const inline = await render("```go ./main.go\nINLINE_CODE\n```", {});
 	assert.match(inline, /<figcaption>\.\/main\.go<\/figcaption>/);
 	assert.match(inline, /INLINE_CODE/);
+	assert.doesNotMatch(inline, /data-codebase-file|<button/);
 	const blog = await render("```go {./missing.go}\nBLOG_CODE\n```", {}, join(chapter, "../../../../blog/example.md"));
 	assert.match(blog, /BLOG_CODE/);
 	assert.doesNotMatch(blog, /<figcaption>/);

@@ -1,0 +1,39 @@
+.course-code pre > code {
+	display: block;
+	width: max-content;
+	min-width: 100%;
+	padding: 0;
+	background: transparent;
+	counter-reset: code-line;
+}
+.course-code .astro-code .line::before {
+	content: counter(code-line) / "";
+	counter-increment: code-line;
+	display: inline-block;
+	min-width: 3ch;
+	margin-right: 1.5ch;
+	padding-right: 1.5ch;
+	border-right: 1px solid var(--separator);
+	color: var(--muted);
+	text-align: right;
+	user-select: none;
+}
+.course-code-file-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+	text-align: start;
+	cursor: pointer;
+	color: var(--foreground);
+}
+.course-code-file-trigger::after {
+	content: "瀏覽檔案";
+	flex-shrink: 0;
+	font-family: var(--font-sans);
+	font-size: .75rem;
+	color: var(--muted);
+}
+.course-code-file-trigger:hover { color: var(--accent); }
+.course-code-file-trigger:focus-visible { outline: 2px solid var(--focus); outline-offset: .25rem; border-radius: .125rem; }

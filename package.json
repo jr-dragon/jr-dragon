@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:components": "bun test --preload ./tests/setup-dom.ts ./tests"
   },
   "dependencies": {
     "@astrojs/markdoc": "^2.0.11",
@@ -21,6 +22,7 @@
     "@astrojs/sitemap": "^3.7.4",
     "@heroui/react": "^3.2.6",
     "@heroui/styles": "^3.2.6",
+    "@react-aria/utils": "^3.34.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
@@ -28,14 +30,19 @@
     "katex": "^0.16.47",
     "lucide-react": "^1.58.0",
     "react": "^19.3.0",
+    "react-aria": "^3.53.1",
+    "react-aria-components": "^1.22.1",
     "react-dom": "^19.3.0",
+    "react-stately": "^3.51.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@types/bun": "^1.4.3",
     "@types/node": "^26.6.5",
+    "happy-dom": "^21.0.3",
     "typescript": "^6"
   }
 }

@@ -96,3 +96,18 @@ The external file replaces any content written inside the fence. Filenames must
 stay inside `codebase`, including when resolving symbolic links. Missing
 `codebase` values or unreadable files cause a rendering error. Ordinary filenames
 without braces continue to display the code written in the article.
+
+Click an external block's filename to open the codebase explorer. It uses the
+local HeroUI-based `Sheet` and `FileTree` components, selects the referenced file,
+and expands its parent folders. Select other files to read their highlighted
+contents with line numbers. The tree supports keyboard navigation; Escape and
+the close button dismiss the sheet and return focus to the filename button.
+On narrow screens, the file tree appears above the preview.
+
+The codebase tree and previews are generated at build time and shared by all
+external blocks in the article. Source Markdown is left unchanged. Only files
+within the configured codebase are enumerated; `.git`, `.jj`, `node_modules`,
+and symbolic links are excluded. Binary files remain listed with a message
+instead of a text preview. Only translation files directly under a chapter
+become course pages, so Markdown files inside a codebase are browsable source
+files rather than additional chapters.

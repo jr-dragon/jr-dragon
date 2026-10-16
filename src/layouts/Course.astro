@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "katex/dist/katex.min.css";
+import "../styles/course-code.css";
 
 interface Props {
 	title: string;
@@ -41,24 +42,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 	main :global(pre > code) {
 		padding: 0;
 		background: transparent;
-	}
-	main :global(.astro-code > code) {
-		display: block;
-		width: max-content;
-		min-width: 100%;
-		counter-reset: code-line;
-	}
-	main :global(.astro-code .line::before) {
-		content: counter(code-line) / "";
-		counter-increment: code-line;
-		display: inline-block;
-		min-width: 3ch;
-		margin-right: 1.5ch;
-		padding-right: 1.5ch;
-		border-right: 1px solid var(--separator);
-		color: var(--muted);
-		text-align: right;
-		user-select: none;
 	}
 	main :global(.course-code-block) {
 		overflow: hidden;

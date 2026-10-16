@@ -20,7 +20,8 @@ const blog = defineCollection({
 const course = defineCollection({
 	loader: glob({
 		base: "./src/content/course",
-		pattern: "**/*.{md,mdx,mdoc}",
+		// Only translations directly inside a chapter are collection entries.
+		pattern: "*/*/*.{md,mdx,mdoc}",
 		// Read external code files on each build instead of caching their rendered HTML.
 		deferRender: true,
 		generateId: ({ entry }) => {
