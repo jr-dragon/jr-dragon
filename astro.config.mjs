@@ -8,6 +8,7 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import sitemap from '@astrojs/sitemap';
+import remarkCourseCode from './src/plugins/remark-course-code';
 
 import partytown from '@astrojs/partytown';
 
@@ -20,7 +21,7 @@ export default defineConfig({
 
   markdown: {
     processor: unified({
-      remarkPlugins: [remarkMath],
+      remarkPlugins: [remarkMath, remarkCourseCode],
       rehypePlugins: [rehypeKatex]
     })
   },

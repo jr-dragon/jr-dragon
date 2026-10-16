@@ -1,3 +1,3 @@
 ---
-title: RESP 協定
+title: RESP：Redis 序列化協議
 ---

@@ -42,6 +42,42 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 		padding: 0;
 		background: transparent;
 	}
+	main :global(.astro-code > code) {
+		display: block;
+		width: max-content;
+		min-width: 100%;
+		counter-reset: code-line;
+	}
+	main :global(.astro-code .line::before) {
+		content: counter(code-line) / "";
+		counter-increment: code-line;
+		display: inline-block;
+		min-width: 3ch;
+		margin-right: 1.5ch;
+		padding-right: 1.5ch;
+		border-right: 1px solid var(--separator);
+		color: var(--muted);
+		text-align: right;
+		user-select: none;
+	}
+	main :global(.course-code-block) {
+		overflow: hidden;
+		border: 1px solid var(--separator);
+		border-radius: var(--radius-xl);
+		background: var(--surface);
+	}
+	main :global(.course-code-block > figcaption) {
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid var(--separator);
+		color: var(--muted);
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		overflow-wrap: anywhere;
+	}
+	main :global(.course-code-block > pre) {
+		margin: 0;
+		border-radius: 0;
+	}
 	main :global(table) {
 		display: block;
 		overflow-x: auto;
