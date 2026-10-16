@@ -26,6 +26,7 @@
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.8",
     "katex": "^0.16.47",
+    "lucide-react": "^1.58.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "rehype-katex": "^7.0.1",
