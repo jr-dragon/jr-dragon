@@ -15,8 +15,8 @@
 
 ## Version Control
 
-- Use `jj` commands for all version control operations, including inspecting status, reviewing diffs, describing changes, and managing bookmarks and remotes.
-- Do not run any `git` commands, directly or through scripts, aliases, or other wrappers.
+- Use `jj` commands for all version control operations except Git submodule management, including inspecting status, reviewing diffs, describing changes, and managing bookmarks and remotes.
+- Use `git` commands only when required for `git submodule` operations. This restriction also applies to commands run through scripts, aliases, or other wrappers.
 - Do not fall back to Git if a `jj` operation fails or `jj` is unavailable; report the issue instead.
 - Consult the [jujutsu documentation](https://docs.jj-vcs.dev) when needed.
 
