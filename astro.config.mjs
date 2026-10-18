@@ -9,6 +9,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import sitemap from '@astrojs/sitemap';
 import remarkCourseCode from './src/plugins/remark-course-code';
+import rehypeCourseCode from './src/plugins/rehype-course-code';
 
 import partytown from '@astrojs/partytown';
 
@@ -22,7 +23,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [remarkMath, remarkCourseCode],
-      rehypePlugins: [rehypeKatex]
+      rehypePlugins: [rehypeKatex, rehypeCourseCode]
     })
   },
 

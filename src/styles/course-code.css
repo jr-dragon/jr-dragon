@@ -4,7 +4,7 @@
 	min-width: 100%;
 	padding: 0;
 	background: transparent;
-	counter-reset: code-line;
+	counter-reset: code-line var(--code-line-start, 0);
 }
 .course-code .astro-code .line::before {
 	content: counter(code-line) / "";
@@ -17,6 +17,20 @@
 	color: var(--muted);
 	text-align: right;
 	user-select: none;
+}
+.course-code .astro-code .line[data-line-number]::before {
+	content: attr(data-line-number) / "";
+	counter-increment: none;
+}
+.course-code .astro-code .line[data-diff] {
+	display: inline-block;
+	min-width: 100%;
+}
+.course-code .astro-code .line[data-diff="+"] {
+	background: var(--success-soft);
+}
+.course-code .astro-code .line[data-diff="-"] {
+	background: var(--danger-soft);
 }
 .course-code-file-trigger {
 	display: flex;

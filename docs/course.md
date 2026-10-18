@@ -92,10 +92,37 @@ codebase: './codebase'
 
 `codebase` is resolved relative to the article file. The example loads
 `codebase/main.go` next to that article and displays `./main.go` as the caption.
-The external file replaces any content written inside the fence. Filenames must
-stay inside `codebase`, including when resolving symbolic links. Missing
+Filenames must stay inside `codebase`, including when resolving symbolic links. Missing
 `codebase` values or unreadable files cause a rendering error. Ordinary filenames
 without braces continue to display the code written in the article.
+
+Append `#Lstart-Lend` to the filename inside the braces to include only an
+inclusive range of lines, for example `go {./main.go#L3-L8}`. This also works
+with a Git snapshot: `go {./main.go#L3-L8}(21b0f49)`. Line numbers start at the
+original source line, and the caption continues to show only the filename.
+The Sheet still opens the complete file from the selected version. Invalid,
+reversed, or out-of-bounds ranges cause a rendering error. Files without a
+line range continue to display their full contents.
+
+Content written inside an external fence adds display-only lines to the loaded
+source. Each line accepts an optional `#Lnumber`, followed by an optional `+` or
+`-` marker, then the content to display. Separate these prefixes with a space;
+indentation after the marker is preserved. For example:
+
+````markdown
+```go {./main.go#L10-L14}(21b0f49)
+#L10 - oldCall()
+#L10 + newCall()
+```
+````
+
+Inserted lines start at line 1 when no number is specified. After an explicit
+number, subsequent unnumbered lines continue from that number. Lines are sorted
+by their displayed numbers; ties keep the fence's order and appear above the
+original source line without replacing or renumbering it. Inserted lines can
+also appear outside an excerpt's range. `+` uses the HeroUI success background;
+`-` uses the danger background. Prefixes are omitted from the displayed code.
+These annotations do not change the source file or the complete Sheet preview.
 
 Click an external block's filename to open the codebase explorer. It uses the
 local HeroUI-based `Sheet` and `FileTree` components, selects the referenced file,

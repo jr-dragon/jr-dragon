@@ -3,6 +3,7 @@ import type { Blockquote, Parents } from "mdast";
 import { isAbsolute } from "node:path";
 import { readCodebaseFile } from "../utils/codebase.server";
 import { parseCodeReference } from "../utils/codebase";
+import { mergeCourseCodeLines } from "../utils/course-code-lines";
 
 const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 	if (!file.path?.replaceAll("\\", "/").includes("/src/content/course/")) return;
@@ -16,6 +17,8 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 				let filename = node.meta.trim();
 				let sourcePath: string | undefined;
 				let sourceRevision: string | undefined;
+				let startLine = 1;
+				let lineMap: string | undefined;
 				let external;
 				try { external = parseCodeReference(filename); }
 				catch (error) { file.fail(error instanceof Error ? error.message : String(error), node); }
@@ -29,8 +32,23 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 						file.fail("External code block filenames must be non-empty paths relative to codebase.", node);
 					}
 					try {
+						const body = node.value;
 						const source = await readCodebaseFile(articlePath, codebase, filename, external.revision);
 						node.value = source.content;
+						if (external.lineRange) {
+							const { start, end } = external.lineRange;
+							const lines = source.content === "" ? [] : source.content.split("\n");
+							if (end > lines.length) {
+								throw new Error(`Line range #L${start}-L${end} exceeds the file's ${lines.length} lines.`);
+							}
+							node.value = lines.slice(start - 1, end).join("\n");
+							startLine = start;
+						}
+						if (body !== "") {
+							const lines = mergeCourseCodeLines(node.value, startLine, body);
+							node.value = lines.map((line) => line.content).join("\n");
+							lineMap = JSON.stringify(lines.map((line) => [line.number, line.diff ?? null]));
+						}
 						sourcePath = source.path;
 						sourceRevision = source.revision;
 						if (sourceRevision) revisions.add(sourceRevision);
@@ -43,7 +61,11 @@ const remarkCourseCode: RemarkPlugin = () => async (tree, file) => {
 					type: "blockquote",
 					data: {
 						hName: "figure",
-						hProperties: { className: ["course-code-block"] },
+						hProperties: {
+							className: ["course-code-block"],
+							...(startLine > 1 && { style: `--code-line-start: ${startLine - 1}` }),
+							...(lineMap && { "data-course-code-lines": lineMap }),
+						},
 					},
 					children: [
 						{

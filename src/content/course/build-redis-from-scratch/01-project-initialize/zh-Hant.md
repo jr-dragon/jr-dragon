@@ -56,7 +56,7 @@ Go 官方提供了一個很優秀的範例：[Go by Example: TCP Server](https:/
 ```go {./main.go}(9c7cbca)
 ```
 
-現在，我們可以用 `nc` 指令來確認一下這個 TCP 伺服器了：
+現在，我們可以用 `nc` 指令來確認一下這個 TCP 伺服器：
 
 ```sh
 $ echo "hello" | nc 127.0.0.1 16379
