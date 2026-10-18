@@ -1,4 +1,3 @@
-[submodule "src/content/course/build-redis-from-scratch/olivine"]
-	path = src/content/course/build-redis-from-scratch/olivine
-	url = /Users/chivincent/repos/olivine
-	branch = ch2/resp
+[submodule "src/content/course/build-redis-from-scratch/codebase"]
+	path = src/content/course/build-redis-from-scratch/codebase
+	url = https://github.com/jr-dragon/olivine.git

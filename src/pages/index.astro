@@ -10,7 +10,8 @@ import { getCourseTitle } from "../config/courses";
 import { groupCourseChapters } from "../utils/course";
 
 const posts = await getCollection("blog");
-const courses = groupCourseChapters(await getCollection("course")).map((course) => ({
+const courseEntries = await getCollection("course");
+const courses = groupCourseChapters(courseEntries).map((course) => ({
 	id: course.name,
 	title: getCourseTitle(course.name),
 	href: course.href,
@@ -19,19 +20,30 @@ const directoryDate = posts
 	.map(({ data }) => data.updatedDate ?? data.pubDate)
 	.sort((a, b) => b.valueOf() - a.valueOf())
 	.at(0);
-const dateParts = directoryDate ? new Intl.DateTimeFormat("en-US", {
-	timeZone: "Asia/Taipei",
-	month: "2-digit",
-	day: "2-digit",
-	year: "numeric",
-	hour: "2-digit",
-	minute: "2-digit",
-	second: "2-digit",
-	hourCycle: "h23",
-}).formatToParts(directoryDate) : [];
-const datePart = (type: Intl.DateTimeFormatPartTypes) =>
-	dateParts.find((part) => part.type === type)?.value;
-const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("day")} ${datePart("hour")}:${datePart("minute")}:${datePart("second")}`;
+const courseDirectoryDate = courseEntries
+	.map(({ data }) => data.pubDate)
+	.sort((a, b) => b.valueOf() - a.valueOf())
+	.at(0);
+
+function formatDirectoryDate(date: Date | undefined) {
+	if (!date) return "";
+	const dateParts = new Intl.DateTimeFormat("en-US", {
+		timeZone: "Asia/Taipei",
+		month: "2-digit",
+		day: "2-digit",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hourCycle: "h23",
+	}).formatToParts(date);
+	const datePart = (type: Intl.DateTimeFormatPartTypes) =>
+		dateParts.find((part) => part.type === type)?.value;
+	return `${datePart("year")}-${datePart("month")}-${datePart("day")} ${datePart("hour")}:${datePart("minute")}:${datePart("second")}`;
+}
+
+const directoryDateText = formatDirectoryDate(directoryDate);
+const courseDirectoryDateText = formatDirectoryDate(courseDirectoryDate);
 ---
 <html lang="zh-Hant" class="dark" data-theme="dark">
 	<head>
@@ -58,6 +70,32 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 							<span class="text-[#9CA3AF]">dr--r--r--</span>{" "}
 							{directoryDate && <time datetime={directoryDate.toISOString()} class="text-[rgb(0,215,0)]">{directoryDateText}</time>}{" "}<span class="text-[rgb(170,170,239)]">articles/</span>
 						</a>
+						<button
+							id="terminal-courses-trigger"
+							type="button"
+							aria-controls="terminal-courses-output"
+							aria-expanded="false"
+							class="block w-max cursor-pointer whitespace-nowrap rounded-sm text-left decoration-[#9CA3AF] underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+						>
+							<span class="text-[#9CA3AF]">dr--r--r--</span>{" "}
+							{courseDirectoryDate && <time datetime={courseDirectoryDate.toISOString()} class="text-[rgb(0,215,0)]">{courseDirectoryDateText}</time>}{" "}<span class="text-[rgb(170,170,239)]">courses/</span>
+						</button>
+						<div><br></div>
+						<div id="terminal-courses-output" aria-live="polite" hidden>
+							<div class="text-[#FFD60A]">
+								<span aria-hidden="true">$ <span id="terminal-courses-command"></span></span>
+								<span class="sr-only">$ ls -l courses/</span>
+							</div>
+							<ul id="terminal-courses-list" aria-label="課程列表" hidden>
+								{courses.map((course) => (
+									<li>
+										<a href={course.href} aria-label={course.title} class="block w-max whitespace-nowrap rounded-sm text-[rgb(170,170,239)] underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2">
+											{course.id}/
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
 					</div>
 				</section>
 				<section aria-labelledby="hero-title" class="order-1 space-y-6 lg:order-2">
@@ -74,9 +112,7 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 								<List size={20} aria-hidden="true" />
 								文章
 							</a>
-							<!--
 							<CourseMenu courses={courses} client:load />
-							 -->
 						</div>
 						<a href="https://github.com/jr-dragon" aria-label="GitHub" class={buttonVariants({ variant: "outline", isIconOnly: true, className: "github-button" })}>
 							<img src={githubLogo.src} alt="" aria-hidden="true" width="28" height="28" class="size-7 shrink-0" />
@@ -87,6 +123,45 @@ const directoryDateText = `${datePart("year")}-${datePart("month")}-${datePart("
 		</main>
 	</body>
 </html>
+
+<script>
+	const trigger = document.querySelector<HTMLButtonElement>("#terminal-courses-trigger");
+	const output = document.querySelector<HTMLDivElement>("#terminal-courses-output");
+	const command = document.querySelector<HTMLSpanElement>("#terminal-courses-command");
+	const list = document.querySelector<HTMLUListElement>("#terminal-courses-list");
+	const commandText = "ls -l courses/";
+	let typingTimeout: ReturnType<typeof setTimeout> | undefined;
+
+	trigger?.addEventListener("click", () => {
+		if (!output || !command || !list) return;
+
+		clearTimeout(typingTimeout);
+		trigger.setAttribute("aria-expanded", "true");
+		output.setAttribute("aria-busy", "true");
+		output.hidden = false;
+		list.hidden = true;
+		command.textContent = "";
+		let characterCount = 0;
+
+		function typeNextCharacter() {
+			if (!output || !command || !list) return;
+
+			characterCount += 1;
+			command.textContent = commandText.slice(0, characterCount);
+			if (characterCount < commandText.length) {
+				typingTimeout = setTimeout(typeNextCharacter, 65);
+			} else {
+				list.hidden = false;
+				output.setAttribute("aria-busy", "false");
+			}
+		}
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			characterCount = commandText.length;
+		}
+		typeNextCharacter();
+	});
+</script>
 
 <style>
 	.github-button {

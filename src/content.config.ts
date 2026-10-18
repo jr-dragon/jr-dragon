@@ -32,6 +32,7 @@ const course = defineCollection({
 	}),
 	schema: z.object({
 		title: z.string().trim().min(1),
+		pubDate: z.coerce.date(),
 		description: z.string().optional(),
 		codebase: z.string().trim().min(1).optional(),
 	}),

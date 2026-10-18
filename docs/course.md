@@ -45,12 +45,13 @@ URL names must each be unique within a course. A chapter can have one file per
 language, regardless of extension; equivalent locale names such as `zh-Hant`
 and `zh-hant` cannot both exist in a chapter.
 
-Every translation must have a non-empty `title` in its frontmatter. A
+Every translation must have a non-empty `title` and a `pubDate` in its frontmatter. A
 `description` is optional:
 
 ```markdown
 ---
 title: Overview
+pubDate: 2026-10-18T18:54:32+08:00
 description: Build a Redis-compatible server from scratch.
 ---
 
@@ -83,6 +84,7 @@ Wrap the filename in braces to load its contents from a local file at build time
 ````markdown
 ---
 title: Overview
+pubDate: 2026-10-18T18:54:32+08:00
 codebase: './codebase'
 ---
 
@@ -141,13 +143,22 @@ files rather than additional chapters.
 
 ### Git snapshots
 
-When `codebase` points to its own Git repository, append a commit hash in
-parentheses immediately after the external filename:
+When `codebase` points to a Git working tree or a directory inside one, append a
+commit hash in parentheses immediately after the external filename:
 
 ````markdown
 ```go {./main.go}(21b0f49)
 ```
 ````
+
+For a repository containing both articles and a `codebase/` directory, a chapter
+can use `codebase: '../codebase'` and reference `{./main.go}(COMMIT_SHA)`.
+The renderer finds the containing repository and reads that directory from the
+selected commit. Filenames, tree nodes, and explorer previews stay relative to
+the configured `codebase`; sibling files and directories are not included.
+The directory must exist in the selected commit. Linked Git worktrees and
+submodule checkouts are supported without creating another repository inside
+the source directory.
 
 Short and full hexadecimal commit hashes are supported. The code block and
 every file in its explorer come from that commit, including files that have
@@ -155,7 +166,8 @@ since been removed or renamed. Each block can use a different commit. The
 filename caption shows only the file path, and the Sheet displays that commit's
 message subject. The hash is used internally to select the snapshot. Reading a snapshot uses
 Git objects without checking out a commit or changing the index or worktree.
-Invalid hashes, missing commits, missing files, and non-repository codebases
+Invalid hashes, missing commits, missing directories or files, and codebases
+outside Git working trees without an adjacent bundle
 produce a rendering error rather than falling back to current contents.
 Unversioned references continue to read the current local files.
 
@@ -165,6 +177,8 @@ Jujutsu excludes nested Git worktrees, so the bundle replaces the loose codebase
 files in the outer repository. A clean website checkout can build previews
 directly from this bundle without restoring the embedded repository; references
 without a hash use the bundle's `HEAD` when no local worktree exists.
+An adjacent bundle takes precedence over discovering a containing repository
+when the configured directory has no Git metadata of its own.
 
 After committing changes inside the embedded codebase, refresh its bundle:
 

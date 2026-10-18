@@ -45,7 +45,7 @@ if (codebase && translation.entry.filePath && translation.entry.data.codebase) {
 		<nav aria-label="章節語言" class="flex flex-wrap gap-3">
 			{translations.map((alternative) => (
 				<a href={alternative.href} lang={alternative.locale} hreflang={alternative.locale} aria-current={alternative.locale === translation.locale ? "page" : undefined} class={buttonVariants({ variant: alternative.locale === translation.locale ? "secondary" : "outline" })}>
-					{alternative.locale}
+					{alternative.language === "en" ? "English" : alternative.language === "zh-Hant" ? "繁體中文" : alternative.locale}
 				</a>
 			))}
 		</nav>

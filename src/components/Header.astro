@@ -1,5 +1,17 @@
 ---
+import { getCollection } from "astro:content";
+import { buttonVariants } from "@heroui/react";
+import { List } from "lucide-react";
+import CourseMenu from "./CourseMenu";
+import { getCourseTitle } from "../config/courses";
+import { groupCourseChapters } from "../utils/course";
+
 const isBlog = Astro.url.pathname.startsWith("/blog");
+const courses = groupCourseChapters(await getCollection("course")).map((course) => ({
+	id: course.name,
+	title: getCourseTitle(course.name),
+	href: course.href,
+}));
 ---
 
 <header class="border-b border-separator">
@@ -10,10 +22,16 @@ const isBlog = Astro.url.pathname.startsWith("/blog");
 		>
 			<img src="/icon.webp" alt="芥龍首頁" width="40" height="40" class="avatar__image" />
 		</a>
-		<a
-			href="/blog/"
-			aria-current={isBlog ? "page" : undefined}
-			class="text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-4"
-		>文章</a>
+		<div class="flex items-center gap-3">
+			<a
+				href="/blog/"
+				aria-current={isBlog ? "page" : undefined}
+				class={buttonVariants({ variant: "primary" })}
+			>
+				<List size={20} aria-hidden="true" />
+				文章
+			</a>
+			{courses.length > 0 && <CourseMenu courses={courses} client:load />}
+		</div>
 	</nav>
 </header>
